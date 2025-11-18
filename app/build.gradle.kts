@@ -49,6 +49,14 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
+    // --- LÍNEAS AÑADIDAS PARA CORREGIR ERRORES ---
+    // (Asegúrate de que 'androidx-ui-text' y 'androidx-ui-unit'
+    // existan en tu archivo libs.versions.toml)
+    implementation(libs.androidx.ui.text)
+    implementation(libs.androidx.ui.unit)
+    // --- FIN DE LÍNEAS AÑADIDAS ---
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -59,9 +67,4 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0")
     implementation("androidx.navigation:navigation-compose:2.8.0-beta06")
     implementation("androidx.datastore:datastore-preferences:1.1.1")
-    //implementation("dev.olshevski.navigation.reimagined:navigation-reimagined-tooling:1.2.0") // Aunque no es para nav, esta tiene la util. Screenshot
-// O si no funciona, puedes usar esta alternativa:
-    implementation("androidx.compose.ui:ui-test-manifest:1.x.y") // La versión debe coincidir con tu versión de Compose UI
-// Normalmente ya está incluida con otras libs de testing, pero por si acaso.
-
 }

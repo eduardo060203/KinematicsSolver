@@ -53,6 +53,10 @@ class KinematicsViewModel(application: Application) : AndroidViewModel(applicati
     internal var yMeters by mutableStateOf(0.0)
     var errorMessage by mutableStateOf<String?>(null)
 
+    // --- NUEVO Getter ---
+    val hasValidSolution: Boolean
+        get() = solutionElbowUpRad != null || solutionElbowDownRad != null
+
     // --- Estado de UI ---
     var isElbowUpSelected by mutableStateOf(true)
     var showGrid by mutableStateOf(true) // Para el estado de la cuadrícula

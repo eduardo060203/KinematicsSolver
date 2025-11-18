@@ -40,4 +40,3 @@ class SettingsRepository(private val context: Context) {
         }
     }
 }
-
