@@ -52,3 +52,99 @@ La motivación principal es integrar los conocimientos de ingeniería robótica 
 El desarrollo abarca la creación de la interfaz de usuario (UI) con Material Design, la lógica de negocio (ViewModel), el motor matemático y la gestión de almacenamiento local en dispositivos Android con API 24 (Nougat) o superior.
 
 ---
+
+## Marco Teórico
+
+### Descripción del ecosistema Android
+El proyecto se desarrolla sobre el sistema operativo Android, utilizando el SDK oficial y las herramientas de desarrollo más recientes proporcionadas por Google (Android Studio Ladybug), garantizando compatibilidad, seguridad y rendimiento en dispositivos móviles actuales.
+
+### Kotlin como lenguaje moderno
+Se utiliza **Kotlin (versión 2.0+)** como lenguaje principal debido a su concisión, seguridad de tipos (null-safety) y su interoperabilidad total con las bibliotecas de Android. Es el lenguaje recomendado por Google para el desarrollo móvil moderno debido a su eficiencia y reducción de código repetitivo (boilerplate).
+
+### Revisión de tecnología relacionada
+* **Jetpack Compose:** Toolkit moderno para construir interfaces de usuario nativas de forma declarativa, eliminando la necesidad de archivos XML complejos.
+* **ViewModel (Architecture Components):** Componente encargado de gestionar y almacenar datos relacionados con la UI de forma consciente del ciclo de vida, evitando pérdida de datos al rotar la pantalla.
+* **DataStore Preferences:** Solución de almacenamiento de datos que reemplaza a SharedPreferences, utilizando Corrutinas y Flow para almacenar datos pequeños (configuraciones) de forma asíncrona y segura.
+
+---
+
+## Análisis del Problema
+
+### Definición detallada del problema
+Los robots manipuladores tienen restricciones geométricas estrictas. Calcular manualmente si un punto $(x, y)$ es alcanzable por un robot con eslabones $L_1$ y $L_2$, y calcular los ángulos necesarios, es un proceso propenso a errores humanos. La app debe automatizar este cálculo y proveer retroalimentación visual inmediata sobre la viabilidad de la solución.
+
+### Requisitos funcionales
+1.  El usuario debe poder ingresar longitudes de eslabones ($L_1, L_2$) y coordenadas objetivo ($X, Y$).
+2.  La app debe calcular $\theta_1$ y $\theta_2$ para las dos configuraciones posibles: "Codo Arriba" y "Codo Abajo".
+3.  La app debe guardar automáticamente los últimos parámetros ingresados para sesiones futuras.
+4.  El sistema debe graficar el robot, el objetivo y su espacio de trabajo limitado.
+5.  El usuario debe poder compartir una imagen de la simulación generada.
+
+### Requisitos no funcionales
+* **Usabilidad:** La interfaz debe ser intuitiva, con validación de formularios en tiempo real (mensajes de error en rojo).
+* **Rendimiento:** La simulación gráfica (Canvas) debe renderizarse fluidamente (60fps) sin lags perceptibles.
+* **Seguridad:** El manejo de archivos compartidos debe usar `FileProvider` para no exponer datos sensibles del sistema de archivos.
+
+### Usuarios objetivo
+Estudiantes de ingeniería mecatrónica, robótica, automatización y docentes de dichas áreas que requieren validaciones rápidas.
+
+### Casos de uso principales
+* **Caso 1: Punto Inalcanzable.** Usuario ingresa un punto fuera del alcance $\rightarrow$ Sistema muestra error "Posición Inalcanzable".
+* **Caso 2: Colisión.** Usuario ingresa punto bajo el suelo ($y < 0$) $\rightarrow$ Sistema deshabilita la solución que choca y alerta al usuario.
+* **Caso 3: Persistencia.** Usuario cierra la app y vuelve a entrar $\rightarrow$ Los valores de $L_1$ y $L_2$ persisten y se cargan automáticamente.
+
+---
+
+## Diseño del Sistema
+
+### Diagrama de navegación
+El flujo de la aplicación es lineal y simplificado para maximizar la eficiencia del usuario:
+> `SolverScreen (Entrada de Parámetros)` $\leftrightarrow$ `SimulationScreen (Visualización Gráfica)`
+
+### Diseño de interfaz
+Se diseñó una interfaz limpia utilizando **Material Design 3**.
+* **Pantalla Principal:** Uso de Tarjetas (`Card`) para agrupar lógicamente los parámetros del robot y del objetivo. Botones grandes y claros para las acciones principales.
+* **Pantalla de Simulación:** Un área de `Canvas` maximizada con un HUD (Heads-Up Display) superpuesto para mostrar datos numéricos sin obstruir la visión del gráfico.
+
+### Selección de librerías y herramientas
+* **IDE:** Android Studio Ladybug.
+* **Control de Versiones:** Git y GitHub.
+* **Librerías Core:**
+    * `androidx.navigation:navigation-compose` (Navegación entre pantallas).
+    * `androidx.datastore:datastore-preferences` (Persistencia de datos).
+    * `androidx.lifecycle:lifecycle-viewmodel-compose` (Gestión de estado MVVM).
+
+---
+
+## Desarrollo de la Aplicación
+
+### Manejo de datos (Persistencia)
+Se implementó la clase `SettingsRepository.kt` utilizando **Preferences DataStore**. Esto permite guardar las longitudes de los eslabones (`l1_input_cm`, `l2_input_cm`) de manera asíncrona. Al iniciar la app, se recuperan estos valores mediante un `Flow` de corrutinas, asegurando que la configuración del robot se mantenga entre sesiones.
+
+### Integración de componentes y lógica
+La aplicación sigue estrictamente la arquitectura **MVVM**:
+1.  **Modelo (`InverseKinematics.kt`):** Contiene la lógica matemática pura (Ley de Cosenos, atan2).
+2.  **ViewModel (`KinematicsViewModel.kt`):** Gestiona el estado de la UI, valida las entradas, maneja errores y se comunica con el repositorio de datos.
+3.  **Vista (`MainActivity.kt`):** Dibuja la UI y reacciona a los cambios de estado del ViewModel.
+
+### Manejo de permisos y características de hardware
+Se gestionan permisos de almacenamiento para la funcionalidad de compartir resultados:
+* Uso de `FileProvider` en el `AndroidManifest.xml` para compartir de forma segura la captura de pantalla (`bitmap`) generada desde el Canvas con otras aplicaciones externas (como WhatsApp, Gmail o Drive).
+
+---
+
+## Pruebas
+
+### Casos de prueba y resultados
+| Caso de Prueba | Acción | Resultado Esperado | Resultado Obtenido |
+| :--- | :--- | :--- | :--- |
+| **Entrada Inválida** | Ingresar texto o números negativos en L1. | El campo muestra error en rojo y bloquea el cálculo. | ✅ Exitoso |
+| **Colisión con Suelo** | Calcular un punto donde el codo baja de Y=0. | El botón de esa solución se deshabilita. | ✅ Exitoso |
+| **Persistencia** | Cambiar L1, cerrar la app (matar proceso) y reabrir. | El valor de L1 modificado debe aparecer al inicio. | ✅ Exitoso |
+| **Exportación** | Pulsar botón "Compartir". | Se abre el menú de Android y se envía la imagen. | ✅ Exitoso |
+
+### Problemas encontrados y cómo se resolvieron
+* **Problema:** El texto dentro del `Canvas` no se renderizaba correctamente debido a problemas de importación con la librería `drawText` en ciertas versiones de Compose.
+* **Solución:** Se rediseñó la interfaz utilizando un `Box` (contenedor). El `Canvas` se colocó en el fondo y los textos (`Text` Composable) se superpusieron en una capa superior. Esto no solo resolvió el problema técnico, sino que mejoró la legibilidad y el diseño visual (HUD).
+
+---
