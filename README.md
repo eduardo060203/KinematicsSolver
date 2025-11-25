@@ -24,3 +24,10 @@
   <br>
   <br>
 </div>
+
+---
+
+## 2. Resumen Ejecutivo
+El proyecto consiste en una aplicación móvil nativa para Android desarrollada en Kotlin que resuelve la cinemática inversa de un robot manipulador plano de dos grados de libertad (2-GDL). Su propósito es proporcionar a estudiantes e ingenieros una herramienta portátil para calcular ángulos articulares, validar colisiones físicas con el entorno y visualizar el comportamiento del robot mediante una simulación gráfica interactiva. Los resultados obtenidos incluyen una interfaz moderna basada en Jetpack Compose, persistencia de datos para parámetros geométricos y la capacidad de exportar reportes visuales de la simulación.
+
+---
