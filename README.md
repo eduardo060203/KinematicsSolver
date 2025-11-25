@@ -148,3 +148,49 @@ Se gestionan permisos de almacenamiento para la funcionalidad de compartir resul
 * **Solución:** Se rediseñó la interfaz utilizando un `Box` (contenedor). El `Canvas` se colocó en el fondo y los textos (`Text` Composable) se superpusieron en una capa superior. Esto no solo resolvió el problema técnico, sino que mejoró la legibilidad y el diseño visual (HUD).
 
 ---
+
+## Resultados
+
+### Funcionamiento final
+La aplicación es totalmente funcional. Realiza cálculos trigonométricos instantáneos, valida físicamente las soluciones y presenta una simulación fluida que se adapta a diferentes tamaños de pantalla gracias al escalado automático.
+
+### Capturas de pantalla
+
+| Pantalla de Configuración | Simulación Visual (Codo Arriba) | Menú de Compartir |
+| :---: | :---: | :---: |
+| ![Configuración](ruta/imagen1.png) | ![Simulación](ruta/imagen2.png) | ![Compartir](ruta/imagen3.png) |
+
+### Cumplimiento de objetivos
+Se cumplieron el 100% de los objetivos planteados: la app resuelve la cinemática inversa, simula el movimiento correctamente, guarda los datos del usuario y permite compartir los resultados.
+
+### Limitaciones actuales
+La aplicación está limitada a robots planos de 2 grados de libertad. No soporta robots de 3 grados o configuraciones espaciales (3D) complejas.
+
+---
+
+## Conclusiones
+
+### Aprendizajes obtenidos
+Se reforzó significativamente el conocimiento sobre el ciclo de vida de Android, la implementación correcta de la arquitectura MVVM y el uso avanzado de gráficos vectoriales en Jetpack Compose. Además, se aprendió a integrar lógica matemática compleja (robótica) dentro de un entorno móvil eficiente.
+
+### Impacto del proyecto
+El proyecto sirve como una base sólida para futuras herramientas educativas en la facultad, demostrando que es posible crear software de ingeniería de alta calidad y utilidad práctica en plataformas móviles accesibles.
+
+### Reflexión del proceso
+La separación de responsabilidades (UI vs Lógica) fue clave para mantener un desarrollo ordenado. El uso de Git permitió un control de versiones efectivo, y la elección de Kotlin simplificó considerablemente la sintaxis del código comparado con Java.
+
+---
+
+## Referencias Bibliográficas
+
+1.  **Android Developers.** (2024). *Guide to App Architecture*. Recuperado de: developer.android.com
+2.  **Kotlin Foundation.** (2024). *Kotlin Documentation*. Recuperado de: kotlinlang.org/docs/home.html
+3.  **Craig, J. J.** (2005). *Introduction to Robotics: Mechanics and Control*. 3rd Edition. Pearson Prentice Hall.
+4.  **Spong, M. W., & Vidyasagar, M.** (1989). *Robot Dynamics and Control*. John Wiley & Sons.
+
+---
+
+## Anexos
+
+### Enlaces a repositorios
+* **GitHub:** [https://github.com/eduardo060203/KinematicsSolver]
